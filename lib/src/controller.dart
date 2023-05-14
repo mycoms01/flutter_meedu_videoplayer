@@ -73,6 +73,7 @@ class MeeduPlayerController {
   final Rx<bool> _pipAvailable = false.obs;
 
   final Rx<bool> _showControls = true.obs;
+  final Rx<bool> _showControlsAway = true.obs;
   final Rx<bool> _showSwipeDuration = false.obs;
   final Rx<bool> _showVolumeStatus = false.obs;
   final Rx<bool> _showBrightnessStatus = false.obs;
@@ -138,7 +139,7 @@ class MeeduPlayerController {
   /// [showControls] is true if the player controls are visible
   Rx<bool> get showControls => _showControls;
   Stream<bool> get onShowControlsChanged => _showControls.stream;
-
+  Rx<bool> get showControlsAway => _showControlsAway;
   /// [showSwipeDuration] is true if the player controls are visible
   Rx<bool> get showSwipeDuration => _showSwipeDuration;
   Stream<bool> get onShowSwipeDurationChanged => _showSwipeDuration.stream;
