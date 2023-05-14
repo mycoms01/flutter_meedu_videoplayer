@@ -140,6 +140,7 @@ class MeeduPlayerController {
   Rx<bool> get showControls => _showControls;
   Stream<bool> get onShowControlsChanged => _showControls.stream;
   Rx<bool> get showControlsAway => _showControlsAway;
+
   /// [showSwipeDuration] is true if the player controls are visible
   Rx<bool> get showSwipeDuration => _showSwipeDuration;
   Stream<bool> get onShowSwipeDurationChanged => _showSwipeDuration.stream;
@@ -725,6 +726,9 @@ class MeeduPlayerController {
 
   /// show or hide the player controls
   set controls(bool visible) {
+    if (_showControlsAway && !visible) {
+      visible = true;
+    }
     // customDebugPrint("controls called with value $visible");
     if (fullscreen.value) {
       //customDebugPrint("Closed");
