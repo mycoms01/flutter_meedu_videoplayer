@@ -725,16 +725,16 @@ class MeeduPlayerController {
     }
   }
 set showControlsAway(bool visible) {
-    _showControlsAway.value = visible;
-    if (_showControls.value != visible) {
-      controls = visible;
-    }
+  _showControlsAway.value = visible;
+  if(_showControls.value != visible){
+    controls=visible;
+  }
  
 }
   /// show or hide the player controls
   set controls(bool visible) {
-    if (_showControlsAway.value && !visible) {
-      visible = true;
+       if (_showControlsAway.value && !visible) {
+          visible = true;
     }
     // customDebugPrint("controls called with value $visible");
     if (fullscreen.value) {

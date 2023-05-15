@@ -39,6 +39,7 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
               if (_.enabledButtons.rewindAndfastForward) ...[
                 PlayerButton(
                   onPressed: _.rewind,
+                  semantic:"ย้อนกลับอย่างรวดเร็ว",
                   size: responsive.iconSize(),
                   iconColor: Colors.white,
                   backgroundColor: Colors.transparent,
@@ -74,6 +75,7 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
                 const SizedBox(width: 10),
                 PlayerButton(
                   onPressed: _.fastForward,
+                  semantic:"ไปข้างหน้าอย่างรวดเร็ว",
                   iconColor: Colors.white,
                   backgroundColor: Colors.transparent,
                   size: responsive.iconSize(),

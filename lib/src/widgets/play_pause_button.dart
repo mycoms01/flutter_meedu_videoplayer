@@ -40,6 +40,7 @@ class PlayPauseButton extends StatelessWidget {
         return PlayerButton(
           backgroundColor: Colors.transparent,
           iconColor: Colors.white,
+          semantic:(_.playerStatus.playing)?"หยุด":"เล่นต่อ",
           onPressed: () {
             if (_.playerStatus.playing) {
               _.pause();

@@ -22,6 +22,7 @@ class MuteSoundButton extends StatelessWidget {
       return PlayerButton(
         size: responsive.buttonSize(),
         circle: false,
+         semantic:(_.mute.value)?"ปิดเสียง":"เปิดเสียง",
         backgroundColor: Colors.transparent,
         iconColor: Colors.white,
         iconPath: iconPath,

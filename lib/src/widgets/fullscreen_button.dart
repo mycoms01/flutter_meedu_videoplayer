@@ -21,6 +21,7 @@ class FullscreenButton extends StatelessWidget {
         return PlayerButton(
           size: size,
           circle: false,
+           semantic:(_.fullscreen.value)?"ย่อหน้าต่าง":"ขยายหน้าต่าง",
           backgroundColor: Colors.transparent,
           iconColor: Colors.white,
           iconPath: iconPath,

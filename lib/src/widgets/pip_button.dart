@@ -18,6 +18,7 @@ class PipButton extends StatelessWidget {
       return PlayerButton(
         size: responsive.buttonSize(),
         circle: false,
+        semantic:"ฟีเจอร์จอเล็ก",
         backgroundColor: Colors.transparent,
         iconColor: Colors.white,
         iconPath: 'assets/icons/picture-in-picture.png',

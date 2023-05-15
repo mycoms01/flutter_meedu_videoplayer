@@ -14,6 +14,7 @@ class VideoFitButton extends StatelessWidget {
     return PlayerButton(
       size: responsive.buttonSize(),
       circle: false,
+      semantic:"ปรับให้พอดี",
       backgroundColor: Colors.transparent,
       iconColor: Colors.white,
       iconPath: iconPath,

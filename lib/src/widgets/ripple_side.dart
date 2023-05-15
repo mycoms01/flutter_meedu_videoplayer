@@ -30,8 +30,8 @@ class ForwardAndRewindRippleSide extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             side == RippleSide.left
-                ? const Icon(Icons.fast_rewind, color: Colors.white)
-                : const Icon(Icons.fast_forward, color: Colors.white),
+                ? const Icon(Icons.fast_rewind, color: Colors.white,semanticLabel: "ย้อนกลับอย่างรวดเร็ว",)
+                : const Icon(Icons.fast_forward, color: Colors.white,semanticLabel: "ไปข้างหน้าอย่างรวดเร็ว",),
             Text(text,
                 style: const TextStyle(
                     color: Colors.white,

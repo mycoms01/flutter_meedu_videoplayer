@@ -4,6 +4,7 @@ import 'package:flutter_meedu_videoplayer/meedu_player.dart';
 class PlayerButton extends StatelessWidget {
   final double size;
   final String? iconPath;
+  final String? semantic;
   final VoidCallback onPressed;
   final Color backgroundColor, iconColor;
   final bool circle;
@@ -18,6 +19,7 @@ class PlayerButton extends StatelessWidget {
     this.backgroundColor = Colors.white54,
     this.iconColor = Colors.black,
     this.customIcon,
+    this.semantic = '',
   }) : super(key: key);
 
   @override
@@ -27,10 +29,8 @@ class PlayerButton extends StatelessWidget {
       //padding: EdgeInsets.zero,
       //minSize: 20,
       onPressed: () {
-
-        onPressed();        
+        onPressed();
         MeeduPlayerController.of(context).controls = true;
-
       },
       child: customIcon ??
           Container(
@@ -41,10 +41,13 @@ class PlayerButton extends StatelessWidget {
               color: backgroundColor,
               shape: circle ? BoxShape.circle : BoxShape.rectangle,
             ),
-            child: Image.asset(
-              iconPath!,
-              color: iconColor,
-              package: 'flutter_meedu_videoplayer',
+            child: Semantics(
+              label: semantic,
+              child: Image.asset(
+                iconPath!,
+                color: iconColor,
+                package: 'flutter_meedu_videoplayer',
+              ),
             ),
           ),
     );
