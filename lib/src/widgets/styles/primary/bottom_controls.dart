@@ -15,37 +15,38 @@ class PrimaryBottomControls extends StatelessWidget {
     );
     Widget durationControls = Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
+      child:
+       RxBuilder(
+                //observables: [_.duration, _.position],
+                (__) {
+     return  Semantics(
+        container:true,
+            explicitChildNodes: true,
+        child:
+       Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.min,
           children: [
-            RxBuilder(
-                //observables: [_.duration, _.position],
-                (__) {
-              return Text(
+            Text(
                 _.duration.value.inMinutes >= 60
                     ? printDurationWithHours(_.position.value)
                     : printDuration(_.position.value),
                 style: textStyle,
-              );
-            }),
+              ),
             // END VIDEO POSITION
             const SizedBox(width: 10),
             const Expanded(
               child: PlayerSlider(),
             ),
             const SizedBox(width: 10),
-            // START VIDEO DURATION
-            RxBuilder(
-              //observables: [_.duration],
-              (__) => Text(
+             Text(
                 _.duration.value.inMinutes >= 60
                     ? printDurationWithHours(_.duration.value)
                     : printDuration(_.duration.value),
                 style: textStyle,
               ),
-            ),
-          ]),
+            
+          ]),);})
     );
     // END VIDEO DURATION
     Widget otherControls =

@@ -28,7 +28,8 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
                 child: _.header!,
               ),
             ),
-          SizedBox(
+         
+          Container(
             height: responsive.height,
             width: responsive.width,
           ),

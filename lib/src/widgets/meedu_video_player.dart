@@ -127,7 +127,8 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
                   }
                   return ExcludeFocus(
                     excluding: _.excludeFocus,
-                    child: Stack(
+
+                child:Stack(
                       // clipBehavior: Clip.hardEdge,
                       // fit: StackFit.,
                       alignment: Alignment.center,
@@ -184,9 +185,11 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
                           )
                       ],
                     ),
+                    
+
                   );
                 },
-              )),
+              ),),
         ),
       ),
     );

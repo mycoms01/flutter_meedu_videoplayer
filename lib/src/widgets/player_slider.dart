@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu_videoplayer/meedu_player.dart';
-
+import 'package:flutter/semantics.dart';
 class PlayerSlider extends StatelessWidget {
   const PlayerSlider({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final _ = MeeduPlayerController.of(context);
@@ -26,7 +25,7 @@ class PlayerSlider extends StatelessWidget {
         RxBuilder(
           //observables: [_.sliderPosition, _.duration],
           (__) {
-            final int value = _.sliderPosition.value.inSeconds;
+            int value = _.sliderPosition.value.inSeconds;
             final double max = _.duration.value.inSeconds.toDouble();
             if (value > max || max <= 0) {
               return Container();
@@ -46,22 +45,51 @@ class PlayerSlider extends StatelessWidget {
                   thumbShape:
                       const RoundSliderThumbShape(enabledThumbRadius: 4.0),
                 ),
-                child: Slider(
-                  min: 0,
-                  divisions: _.duration.value.inSeconds,
-                  value: value.toDouble(),
-                  onChangeStart: (v) {
-                    _.onChangedSliderStart();
+                child: Semantics(
+                  slider: true,
+                  focusable: true,
+                  excludeSemantics: true,
+                  onIncrease: () async{
+                    value = (_.sliderPosition.value.inSeconds + 10);
+                    _.seekTo(Duration(seconds: value));
+                    await Future<void>.delayed(const Duration(milliseconds: 300), () {
+                      
+                SemanticsService.announce(
+                        "ตำแหน่งในการเล่น ${printDuration(Duration(seconds: value))}",TextDirection.ltr);
+                });
+
+                    
                   },
-                  onChangeEnd: (v) {
-                    _.onChangedSliderEnd();
-                    _.seekTo(
-                      Duration(seconds: v.floor()),
-                    );
+                  onDecrease: () async{
+                    value = (_.sliderPosition.value.inSeconds - 10);
+                    _.seekTo(Duration(seconds: value));
+                    await Future<void>.delayed(const Duration(milliseconds: 300), () {
+                   SemanticsService.announce(
+                        "ตำแหน่งในการเล่น ${printDuration(Duration(seconds: value))}",TextDirection.ltr);
+                });
+                    // SemanticsService.announce(
+                    //     "ตำแหน่งในการเล่น ${printDuration(Duration(seconds: value))}");
                   },
-                  label: printDuration(_.sliderPosition.value),
-                  max: max,
-                  onChanged: _.onChangedSlider,
+                  child: Slider(
+                    min: 0,
+                    divisions: _.duration.value.inSeconds,
+                    value: value.toDouble(),
+                    onChangeStart: (v) {
+                      _.onChangedSliderStart();
+                    },
+                    onChangeEnd: (v) {
+                      _.onChangedSliderEnd();
+                      _.seekTo(
+                        Duration(seconds: v.floor()),
+                      );
+                    },
+                    label: printDuration(_.sliderPosition.value),
+                    semanticFormatterCallback: (double newValue) {
+                      return "ตำแหน่งในการเล่น ${printDuration(_.sliderPosition.value)}";
+                    },
+                    max: max,
+                    onChanged: _.onChangedSlider,
+                  ),
                 ),
               ),
             );
