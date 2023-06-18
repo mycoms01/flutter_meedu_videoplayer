@@ -1,3 +1,12 @@
+## 4.2.11-dev-2
+* Fixes ios orientation
+* Fixes back button not working
+## 4.2.11-dev
+* Adding on long press speed up video in controls
+* Feature mobile UI lock [0Franky](https://github.com/0Franky)
+* Feature desktop pip [0Franky](https://github.com/0Franky)
+* Add ControlsStyle.primaryList for scrollable list [ADAIN](https://github.com/ADAIN)
+
 ## 4.2.10
 * Improving the controls by showing overlays on top of the controls.
 * Fixes controls disappearing while clicking.

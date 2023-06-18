@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu_videoplayer/meedu_player.dart';
 import 'package:flutter_meedu_videoplayer/src/widgets/styles/controls_container.dart';
+import 'package:flutter_meedu_videoplayer/src/widgets/styles/primary/primary_list_player_controls.dart';
 import 'package:flutter_meedu_videoplayer/src/widgets/styles/primary/primary_player_controls.dart';
 import 'package:flutter_meedu_videoplayer/src/widgets/styles/secondary/secondary_player_controls.dart';
 import '../helpers/shortcuts/intent_action_map.dart';
@@ -127,8 +128,7 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
                   }
                   return ExcludeFocus(
                     excluding: _.excludeFocus,
-
-                child:Stack(
+                    child: Stack(
                       // clipBehavior: Clip.hardEdge,
                       // fit: StackFit.,
                       alignment: Alignment.center,
@@ -172,6 +172,11 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
                             responsive: _.responsive,
                           ),
                         if (_.controlsEnabled &&
+                            _.controlsStyle == ControlsStyle.primaryList)
+                          PrimaryListVideoPlayerControls(
+                            responsive: _.responsive,
+                          ),
+                        if (_.controlsEnabled &&
                             _.controlsStyle == ControlsStyle.secondary)
                           SecondaryVideoPlayerControls(
                             responsive: _.responsive,
@@ -185,11 +190,9 @@ class _MeeduVideoPlayerState extends State<MeeduVideoPlayer> {
                           )
                       ],
                     ),
-                    
-
                   );
                 },
-              ),),
+              )),
         ),
       ),
     );

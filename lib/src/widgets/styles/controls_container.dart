@@ -2,14 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu_videoplayer/meedu_player.dart';
+import 'package:flutter_meedu_videoplayer/src/widgets/lock_button.dart';
+import 'package:universal_platform/universal_platform.dart';
+import 'package:window_manager/window_manager.dart';
 
 class ControlsContainer extends StatefulWidget {
   final Widget child;
   final Responsive responsive;
+  final bool preventVerticalDrag;
+  final bool preventHorizontalDrag;
   //Duration swipeDuration=Duration(seconds: 0);
-  const ControlsContainer(
-      {Key? key, required this.child, required this.responsive})
-      : super(key: key);
+  const ControlsContainer({
+    Key? key,
+    required this.child,
+    required this.responsive,
+    this.preventHorizontalDrag = false,
+    this.preventVerticalDrag = false,
+  }) : super(key: key);
 
   @override
   State<ControlsContainer> createState() => _ControlsContainerState();
@@ -222,140 +231,71 @@ class _ControlsContainerState extends State<ControlsContainer> {
   }
 
   Widget controlsUI(MeeduPlayerController _, BuildContext context) {
-    return Stack(
-      children: [
-        RxBuilder((__) {
-          if (!_.mobileControls) {
-            return MouseRegion(
-                cursor: _.showControls.value
-                    ? SystemMouseCursors.basic
-                    : SystemMouseCursors.none,
-                onHover: (___) {
-                  //customDebugPrint(___.delta);
-                  if (_.mouseMoveInitial < const Offset(75, 75).distance) {
-                    _.mouseMoveInitial =
-                        _.mouseMoveInitial + ___.delta.distance;
-                  } else {
-                    _.controls = true;
-                  }
-                },
-                child: videoControls(_, context));
-          } else {
-            return videoControls(_, context);
-          }
-        }),
-        if (_.enabledControls.doubleTapToSeek && (_.mobileControls))
-          RxBuilder(
-            //observables: [_.showControls],
-            (__) => IgnorePointer(
-              ignoring: true,
-              child: VideoCoreForwardAndRewind(
-                responsive: widget.responsive,
-                showRewind: _.rewindIcons.value,
-                showForward: _.forwardIcons.value,
-                rewindSeconds: _defaultSeekAmount * _.doubleTapCount.value,
-                forwardSeconds: _defaultSeekAmount * _.doubleTapCount.value,
-              ),
-            ),
-          ),
-        if (_.enabledOverlays.volume)
-          RxBuilder(
-            //observables: [_.volume],
-            (__) => AnimatedOpacity(
-              duration: _.durations.volumeOverlayDuration,
-              opacity: _.showVolumeStatus.value ? 1 : 0,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.all(10),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: SizedBox(
-                      height: widget.responsive.height / 2,
-                      width: 35,
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        children: [
-                          Container(color: Colors.black38),
-                          Container(
-                            height:
-                                _.volume.value * widget.responsive.height / 2,
-                            color: Colors.blue,
-                          ),
-                          Container(
-                              padding: const EdgeInsets.all(5),
-                              child: const Icon(
-                                Icons.music_note,
-                                color: Colors.white,
-                              )),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        if (_.enabledOverlays.brightness)
-          RxBuilder(
-            //observables: [_.volume],
-            (__) => AnimatedOpacity(
-              duration: _.durations.brightnessOverlayDuration,
-              opacity: _.showBrightnessStatus.value ? 1 : 0,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.all(10),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: SizedBox(
-                      height: widget.responsive.height / 2,
-                      width: 35,
-                      child: Stack(
-                        alignment: AlignmentDirectional.bottomCenter,
-                        children: [
-                          Container(color: Colors.black38),
-                          Container(
-                            height: _.brightness.value *
-                                widget.responsive.height /
-                                2,
-                            color: Colors.blue,
-                          ),
-                          Container(
-                              padding: const EdgeInsets.all(5),
-                              child: const Icon(
-                                Icons.wb_sunny,
-                                color: Colors.white,
-                              )),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
+    return Stack(children: [
+      RxBuilder((__) {
+        if (!_.mobileControls) {
+          return MouseRegion(
+              cursor: _.showControls.value
+                  ? SystemMouseCursors.basic
+                  : SystemMouseCursors.none,
+              onHover: (___) {
+                //customDebugPrint(___.delta);
+                if (_.mouseMoveInitial < const Offset(75, 75).distance) {
+                  _.mouseMoveInitial = _.mouseMoveInitial + ___.delta.distance;
+                } else {
+                  _.controls = true;
+                }
+              },
+              child: videoControls(_, context));
+        } else {
+          return videoControls(_, context);
+        }
+      }),
+      if (_.enabledControls.doubleTapToSeek && (_.mobileControls))
         RxBuilder(
-          //observables: [_.showSwipeDuration],
-          //observables: [_.swipeDuration],
-          (__) => Align(
-            alignment: Alignment.center,
-            child: AnimatedOpacity(
-              duration: _.durations.seekDuration,
-              opacity: _.showSwipeDuration.value ? 1 : 0,
-              child: Visibility(
-                visible: _.showSwipeDuration.value,
-                child: Container(
-                  color: Colors.grey[900],
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      _.swipeDuration.value > 0
-                          ? "+ ${printDuration(Duration(seconds: _.swipeDuration.value))}"
-                          : "- ${printDuration(Duration(seconds: _.swipeDuration.value))}",
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
+          //observables: [_.showControls],
+          (__) => IgnorePointer(
+            ignoring: true,
+            child: VideoCoreForwardAndRewind(
+              responsive: widget.responsive,
+              showRewind: _.rewindIcons.value,
+              showForward: _.forwardIcons.value,
+              rewindSeconds: _defaultSeekAmount * _.doubleTapCount.value,
+              forwardSeconds: _defaultSeekAmount * _.doubleTapCount.value,
+            ),
+          ),
+        ),
+      if (_.enabledOverlays.volume)
+        RxBuilder(
+          //observables: [_.volume],
+          (__) => AnimatedOpacity(
+            duration: _.durations.volumeOverlayDuration,
+            opacity: _.showVolumeStatus.value ? 1 : 0,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: SizedBox(
+                    height: widget.responsive.height / 2,
+                    width: 35,
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        Container(color: Colors.black38),
+                        Container(
+                          height: _.volume.value * widget.responsive.height / 2,
+                          color: Colors.blue,
+                        ),
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            child: const Icon(
+                              Icons.music_note,
+                              color: Colors.white,
+                            )),
+                      ],
                     ),
                   ),
                 ),
@@ -363,24 +303,38 @@ class _ControlsContainerState extends State<ControlsContainer> {
             ),
           ),
         ),
+      if (_.enabledOverlays.brightness)
         RxBuilder(
-          //observables: [_.showSwipeDuration],
-          //observables: [_.swipeDuration],
-          (__) => Align(
-            alignment: Alignment.center,
-            child: AnimatedOpacity(
-              duration: _.durations.videoFitOverlayDuration,
-              opacity: _.videoFitChanged.value ? 1 : 0,
-              child: Visibility(
-                visible: _.videoFitChanged.value,
-                child: Container(
-                  color: Colors.grey[900],
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      _.videoFit.value.name[0].toUpperCase() +
-                          _.videoFit.value.name.substring(1),
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
+          //observables: [_.volume],
+          (__) => AnimatedOpacity(
+            duration: _.durations.brightnessOverlayDuration,
+            opacity: _.showBrightnessStatus.value ? 1 : 0,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: SizedBox(
+                    height: widget.responsive.height / 2,
+                    width: 35,
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        Container(color: Colors.black38),
+                        Container(
+                          height:
+                              _.brightness.value * widget.responsive.height / 2,
+                          color: Colors.blue,
+                        ),
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            child: const Icon(
+                              Icons.wb_sunny,
+                              color: Colors.white,
+                            )),
+                      ],
                     ),
                   ),
                 ),
@@ -388,34 +342,232 @@ class _ControlsContainerState extends State<ControlsContainer> {
             ),
           ),
         ),
-        RxBuilder(
-            //observables: [_.showControls],
-            (__) {
-          _.dataStatus.status.value;
-          if (_.dataStatus.error) {
-            return Center(
-                child: Text(
-              _.errorText!,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ));
+      RxBuilder(
+        //observables: [_.showSwipeDuration],
+        //observables: [_.swipeDuration],
+        (__) => Align(
+          alignment: Alignment.center,
+          child: AnimatedOpacity(
+            duration: _.durations.seekDuration,
+            opacity: _.showSwipeDuration.value ? 1 : 0,
+            child: Visibility(
+              visible: _.showSwipeDuration.value,
+              child: Container(
+                color: Colors.grey[900],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _.swipeDuration.value > 0
+                        ? "+ ${printDuration(Duration(seconds: _.swipeDuration.value))}"
+                        : "- ${printDuration(Duration(seconds: _.swipeDuration.value))}",
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      RxBuilder(
+        //observables: [_.showSwipeDuration],
+        //observables: [_.swipeDuration],
+        (__) => Align(
+          alignment: Alignment.center,
+          child: AnimatedOpacity(
+            duration: _.durations.videoFitOverlayDuration,
+            opacity: _.videoFitChanged.value ? 1 : 0,
+            child: Visibility(
+              visible: _.videoFitChanged.value,
+              child: Container(
+                color: Colors.grey[900],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _.videoFit.value.name[0].toUpperCase() +
+                        _.videoFit.value.name.substring(1),
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      RxBuilder(
+          //observables: [_.showControls],
+          (__) {
+        _.dataStatus.status.value;
+        if (_.dataStatus.error) {
+          return Center(
+              child: Text(
+            _.errorText!,
+            style: const TextStyle(color: Colors.white, fontSize: 16),
+          ));
+        } else {
+          return Container();
+        }
+      }),
+      RxBuilder(
+          //observables: [_.showControls],
+          (__) {
+        _.dataStatus.status.value;
+        if (_.dataStatus.loading || _.isBuffering.value) {
+          return Center(
+            child: _.loadingWidget,
+          );
+        } else {
+          return Container();
+        }
+      }),
+    ]);
+  }
+
+  //----------------------------//
+  bool checkMobileLock(MeeduPlayerController _) {
+    if (!UniversalPlatform.isDesktopOrWeb && !_.lockedControls.value) {
+      // reminds the user that the UI is locked
+      // showLockIcon();
+    }
+    return _.lockedControls.value && !UniversalPlatform.isDesktopOrWeb;
+  }
+
+  void windowDrag(MeeduPlayerController _) {
+    if (_.isInPipMode.value) {
+      windowManager.startDragging();
+    }
+  }
+
+  void onTap(MeeduPlayerController _) {
+    if (!_.mobileControls) {
+      if (tappedTwice) {
+        if (_.enabledControls.desktopDoubleTapToFullScreen) {
+          _.toggleFullScreen(context);
+        }
+
+        tappedOnce(_, true);
+      } else {
+        if (_.enabledControls.desktopTapToPlayAndPause) {
+          _.togglePlay();
+        }
+        tappedOnce(_, false);
+      }
+    }
+    _.controls = !_.showControls.value;
+    _dragInitialDelta = Offset.zero;
+  }
+
+  void onHorizontalDragUpdate(
+      DragUpdateDetails details, MeeduPlayerController _) {
+    if (checkMobileLock(_)) return;
+
+    if (_.enabledControls.seekSwipes) {
+      //if (!_.videoPlayerController!.value.isInitialized) {
+      //return;
+      //}
+
+      //_.controls=true;
+      final Offset position = details.localPosition;
+      if (_dragInitialDelta == Offset.zero) {
+        final Offset delta = details.delta;
+        if (details.localPosition.dx > widget.responsive.width * 0.1 &&
+            ((widget.responsive.width - details.localPosition.dx) >
+                    widget.responsive.width * 0.1 &&
+                !gettingNotification)) {
+          _forwardDragStart(position, _);
+          _dragInitialDelta = delta;
+        } else {
+          _.customDebugPrint("##############out###############");
+          gettingNotification = true;
+        }
+      } else {
+        if (!gettingNotification) {
+          _forwardDragUpdate(position, _);
+        }
+      }
+    }
+  }
+
+  void onHorizontalDragEnd(DragEndDetails details, MeeduPlayerController _) {
+    if (checkMobileLock(_)) return;
+
+    if (_.enabledControls.seekSwipes) {
+      //if (!_.videoPlayerController!.value.isInitialized) {
+      //return;
+      //}
+      gettingNotification = false;
+      _forwardDragEnd(_);
+    }
+  }
+
+  void onVerticalDragUpdate(
+      DragUpdateDetails details, MeeduPlayerController _) {
+    if (checkMobileLock(_)) return;
+
+    if (_.mobileControls) {
+      //if (!_.videoPlayerController!.value.isInitialized) {
+      //return;
+      //}
+      //_.controls=true;
+
+      final Offset position = details.localPosition;
+      if (_dragInitialDelta == Offset.zero) {
+        _.customDebugPrint(details.localPosition.dy);
+        if (details.localPosition.dy > widget.responsive.height * 0.1 &&
+            ((widget.responsive.height - details.localPosition.dy) >
+                widget.responsive.height * 0.1) &&
+            !gettingNotification) {
+          final Offset delta = details.delta;
+          //if(details.localPosition.dy<30){
+          if (details.localPosition.dx >= widget.responsive.width / 2) {
+            if (_.enabledControls.volumeSwipes) {
+              _volumeDragStart(position, _);
+            }
+            _dragInitialDelta = delta;
+            //customDebugPrint("right");
           } else {
-            return Container();
+            if (_.mobileControls && _.enabledControls.brightnessSwipes) {
+              _brightnessDragStart(position, _);
+            }
+            _dragInitialDelta = delta;
+            //customDebugPrint("left");
           }
-        }),
-        RxBuilder(
-            //observables: [_.showControls],
-            (__) {
-          _.dataStatus.status.value;
-          if (_.dataStatus.loading || _.isBuffering.value) {
-            return Center(
-              child: _.loadingWidget,
-            );
+        } else {
+          _.customDebugPrint("getting Notification");
+          gettingNotification = true;
+        }
+        //}
+      } else {
+        if (!gettingNotification) {
+          if (isVolume && _.enabledControls.volumeSwipes) {
+            _volumeDragUpdate(position, _);
           } else {
-            return Container();
+            if (_.mobileControls && _.enabledControls.brightnessSwipes) {
+              _brightnessDragUpdate(position, _);
+            }
           }
-        }),
-      ],
-    );
+        }
+      }
+
+      //_.videoPlayerController!.seekTo(position);
+    }
+  }
+
+  void onVerticalDragEnd(DragEndDetails details, MeeduPlayerController _) {
+    if (checkMobileLock(_)) return;
+
+    if (_.mobileControls) {
+      //if (!_.videoPlayerController!.value.isInitialized) {
+      // return;
+      //}
+      gettingNotification = false;
+      if (isVolume && _.enabledControls.volumeSwipes) {
+        _volumeDragEnd(_);
+      } else {
+        if (_.mobileControls && _.enabledControls.brightnessSwipes) {
+          _brightnessDragEnd(_);
+        }
+      }
+    }
   }
 
   Widget videoControls(MeeduPlayerController _, BuildContext context) {
@@ -423,187 +575,102 @@ class _ControlsContainerState extends State<ControlsContainer> {
       container: true,
       focusable: true,
       label: "vdo player",
-      onScrollDown: () {
-        print('onScrollDown');
-      },
-      onScrollUp: () {
-        print('onScrollUp');
-      },
-      
       child: GestureDetector(
-        excludeFromSemantics: true,
-        onTap: () {
-          _.customDebugPrint("onTap");
-          if (!_.mobileControls) {
-            if (tappedTwice) {
-              if (_.enabledControls.desktopDoubleTapToFullScreen) {
-                _.toggleFullScreen(context);
-              }
-
-              tappedOnce(_, true);
-            } else {
-              if (_.enabledControls.desktopTapToPlayAndPause) {
-                _.togglePlay();
-              }
-              tappedOnce(_, false);
-            }
-          }
-          _.controls = !_.showControls.value;
-          _dragInitialDelta = Offset.zero;
-        },
-        onHorizontalDragUpdate: (DragUpdateDetails details) {
-          _.customDebugPrint("onHorizontalDragUpdate");
-          if (_.mobileControls && _.enabledControls.seekSwipes) {
-            //if (!_.videoPlayerController!.value.isInitialized) {
-            //return;
-            //}
-
-            //_.controls=true;
-            final Offset position = details.localPosition;
-            if (_dragInitialDelta == Offset.zero) {
-              final Offset delta = details.delta;
-              if (details.localPosition.dx > widget.responsive.width * 0.1 &&
-                  ((widget.responsive.width - details.localPosition.dx) >
-                          widget.responsive.width * 0.1 &&
-                      !gettingNotification)) {
-                _forwardDragStart(position, _);
-                _dragInitialDelta = delta;
-              } else {
-                _.customDebugPrint("##############out###############");
-                gettingNotification = true;
-              }
-            }
-            if (!gettingNotification) {
-              _forwardDragUpdate(position, _);
-            }
-          }
-
-          //_.videoPlayerController!.seekTo(position);
-        },
-        onHorizontalDragEnd: (DragEndDetails details) {
-          _.customDebugPrint("onHorizontalDragEnd");
-          if (_.mobileControls && _.enabledControls.seekSwipes) {
-            //if (!_.videoPlayerController!.value.isInitialized) {
-            //return;
-            //}
-            gettingNotification = false;
-            _forwardDragEnd(_);
-          }
-        },
-        onVerticalDragUpdate: (DragUpdateDetails details) {
-          _.customDebugPrint("onVerticalDragUpdate");
-          if (_.mobileControls) {
-            //if (!_.videoPlayerController!.value.isInitialized) {
-            //return;
-            //}
-            //_.controls=true;
-
-            final Offset position = details.localPosition;
-            if (_dragInitialDelta == Offset.zero) {
-              _.customDebugPrint(details.localPosition.dy);
-              if (details.localPosition.dy > widget.responsive.height * 0.1 &&
-                  ((widget.responsive.height - details.localPosition.dy) >
-                      widget.responsive.height * 0.1) &&
-                  !gettingNotification) {
-                final Offset delta = details.delta;
-                //if(details.localPosition.dy<30){
-                if (details.localPosition.dx >= widget.responsive.width / 2) {
-                  if (_.enabledControls.volumeSwipes) {
-                    _volumeDragStart(position, _);
+        onPanStart: UniversalPlatform.isDesktop ? (__) => windowDrag(_) : null,
+        onTap: () => onTap(_),
+        onLongPressStart:
+            (_.mobileControls && _.enabledControls.onLongPressSpeedUp)
+                ? (details) {
+                    _.setPlaybackSpeed(2);
                   }
-                  _dragInitialDelta = delta;
-                  //customDebugPrint("right");
-                } else {
-                  if (_.mobileControls && _.enabledControls.brightnessSwipes) {
-                    _brightnessDragStart(position, _);
+                : null,
+        onLongPressEnd:
+            (_.mobileControls && _.enabledControls.onLongPressSpeedUp)
+                ? (details) {
+                    _.setPlaybackSpeed(1);
                   }
-                  _dragInitialDelta = delta;
-                  //customDebugPrint("left");
-                }
-              } else {
-                _.customDebugPrint("getting Notification");
-                gettingNotification = true;
-              }
-              //}
-            } else {
-              if (!gettingNotification) {
-                if (isVolume && _.enabledControls.volumeSwipes) {
-                  _volumeDragUpdate(position, _);
-                } else {
-                  if (_.mobileControls && _.enabledControls.brightnessSwipes) {
-                    _brightnessDragUpdate(position, _);
-                  }
-                }
-              }
-            }
-          }
-          //_.videoPlayerController!.seekTo(position);
-        },
-        onVerticalDragEnd: (DragEndDetails details) {
-          _.customDebugPrint("onVerticalDragEnd");
-          if (_.mobileControls) {
-            //if (!_.videoPlayerController!.value.isInitialized) {
-            // return;
-            //}
-            gettingNotification = false;
-            if (isVolume && _.enabledControls.volumeSwipes) {
-              _volumeDragEnd(_);
-            } else {
-              if (_.mobileControls && _.enabledControls.brightnessSwipes) {
-                _brightnessDragEnd(_);
-              }
-            }
-          }
-        },
-        child: AnimatedOpacity(
-          opacity: _.showControls.value ? 1 : 0,
+                : null,
+        onHorizontalDragUpdate:
+            (_.mobileControls && !widget.preventVerticalDrag)
+                ? (details) => onHorizontalDragUpdate(details, _)
+                : null,
+        onHorizontalDragEnd: (_.mobileControls && !widget.preventVerticalDrag)
+            ? (details) => onHorizontalDragEnd(details, _)
+            : null,
+        onVerticalDragUpdate: (_.mobileControls && !widget.preventVerticalDrag)
+            ? (details) => onVerticalDragUpdate(details, _)
+            : null,
+        onVerticalDragEnd: (_.mobileControls && !widget.preventVerticalDrag)
+            ? (details) => onVerticalDragEnd(details, _)
+            : null,
+        child: AnimatedContainer(
           duration: _.durations.controlsDuration,
-          child: AnimatedContainer(
-              duration: _.durations.controlsDuration,
-              color: _.showControls.value ? Colors.black26 : Colors.transparent,
-              child: Stack(
-                children: [
-                  if (_.enabledControls.doubleTapToSeek && (_.mobileControls))
-                    Semantics(
+          color: _.showControls.value ? Colors.black26 : Colors.transparent,
+          child: Stack(
+            children: [
+              if (_.enabledControls.doubleTapToSeek &&
+                  (_.mobileControls) &&
+                  !_.lockedControls.value)
+                Positioned.fill(
+                    bottom: widget.responsive.height * 0.20,
+                    top: widget.responsive.height * 0.20,
+                    child: Semantics(
                       excludeSemantics: true,
-                      child: Positioned.fill(
-                        bottom: widget.responsive.height * 0.20,
-                        top: widget.responsive.height * 0.20,
-                        child: VideoCoreForwardAndRewindLayout(
-                          responsive: widget.responsive,
-                          rewind: GestureDetector(
-                            // behavior: HitTestBehavior.translucent,
-                            onTap: () {
-                              if (_.doubleTapCount.value != 0 || tappedTwice) {
-                                _rewind(context, _);
-                                tappedOnce(_, true);
-                              } else {
-                                tappedOnce(_, false);
-                              }
-                            },
-                          ),
-                          forward: GestureDetector(
-                            // behavior: HitTestBehavior.translucent,
-                            onTap: () {
-                              if (_.doubleTapCount.value != 0 || tappedTwice) {
-                                _forward(context, _);
-                                tappedOnce(_, true);
-                              } else {
-                                tappedOnce(_, false);
-                              }
-                            },
-                            //behavior: HitTestBehavior.,
-                          ),
+                      child: VideoCoreForwardAndRewindLayout(
+                        responsive: widget.responsive,
+                        rewind: GestureDetector(
+                          // behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            if (_.doubleTapCount.value != 0 || tappedTwice) {
+                              _rewind(context, _);
+                              tappedOnce(_, true);
+                            } else {
+                              tappedOnce(_, false);
+                            }
+                          },
+                        ),
+                        forward: GestureDetector(
+                          // behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            if (_.doubleTapCount.value != 0 || tappedTwice) {
+                              _forward(context, _);
+                              tappedOnce(_, true);
+                            } else {
+                              tappedOnce(_, false);
+                            }
+                          },
+                          //behavior: HitTestBehavior.,
                         ),
                       ),
-                    ),
-                  IgnorePointer(
-                      ignoring: !_.showControls.value, child: widget.child),
-                ],
-              )),
+                    )),
+              AnimatedOpacity(
+                opacity:
+                    (!_.showControls.value || _.lockedControls.value) ? 0 : 1,
+                duration: _.durations.controlsDuration,
+                child: IgnorePointer(
+                    ignoring: (!_.showControls.value || _.lockedControls.value),
+                    child: widget.child),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: AnimatedOpacity(
+                  opacity:
+                      !(_.showControls.value && _.lockedControls.value) ? 0 : 1,
+                  duration: _.durations.controlsDuration,
+                  child: IgnorePointer(
+                      ignoring:
+                          !(_.showControls.value && _.lockedControls.value),
+                      child: LockButton(
+                        responsive: _.responsive,
+                      )),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
+    //_.videoPlayerController!.seekTo(position);
   }
 
   @override

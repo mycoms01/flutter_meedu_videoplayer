@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_meedu_videoplayer/meedu_player.dart';
 import 'package:flutter/semantics.dart';
+
 class PlayerSlider extends StatelessWidget {
   const PlayerSlider({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final _ = MeeduPlayerController.of(context);
@@ -47,26 +49,26 @@ class PlayerSlider extends StatelessWidget {
                 ),
                 child: Semantics(
                   slider: true,
-                  focusable: true,
                   excludeSemantics: true,
-                  onIncrease: () async{
+                  onIncrease: () async {
                     value = (_.sliderPosition.value.inSeconds + 10);
                     _.seekTo(Duration(seconds: value));
-                    await Future<void>.delayed(const Duration(milliseconds: 300), () {
-                      
-                SemanticsService.announce(
-                        "ตำแหน่งในการเล่น ${printDuration(Duration(seconds: value))}",TextDirection.ltr);
-                });
-
-                    
+                    await Future<void>.delayed(
+                        const Duration(milliseconds: 300), () {
+                      SemanticsService.announce(
+                          "ตำแหน่งในการเล่น ${printDuration(Duration(seconds: value))}",
+                          TextDirection.ltr);
+                    });
                   },
-                  onDecrease: () async{
+                  onDecrease: () async {
                     value = (_.sliderPosition.value.inSeconds - 10);
                     _.seekTo(Duration(seconds: value));
-                    await Future<void>.delayed(const Duration(milliseconds: 300), () {
-                   SemanticsService.announce(
-                        "ตำแหน่งในการเล่น ${printDuration(Duration(seconds: value))}",TextDirection.ltr);
-                });
+                    await Future<void>.delayed(
+                        const Duration(milliseconds: 300), () {
+                      SemanticsService.announce(
+                          "ตำแหน่งในการเล่น ${printDuration(Duration(seconds: value))}",
+                          TextDirection.ltr);
+                    });
                     // SemanticsService.announce(
                     //     "ตำแหน่งในการเล่น ${printDuration(Duration(seconds: value))}");
                   },

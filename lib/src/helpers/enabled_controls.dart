@@ -13,6 +13,9 @@ class EnabledControls {
   /// on mobile, double tap on sides to seek forward or backwards
   final bool doubleTapToSeek;
 
+  /// on mobile, long press to speed up video and slows down when long press finishes.
+  final bool onLongPressSpeedUp;
+
   /// on desktop, double clicks with mouse go fullScreen or close it
   final bool desktopDoubleTapToFullScreen;
 
@@ -49,40 +52,41 @@ class EnabledControls {
       this.volumeSwipes = true,
       this.brightnessSwipes = true,
       this.doubleTapToSeek = true,
-      this.desktopDoubleTapToFullScreen = true});
+      this.desktopDoubleTapToFullScreen = true,
+      this.onLongPressSpeedUp = false});
 
-  EnabledControls copyWith({
-    bool? desktopTapToPlayAndPause,
-    bool? seekSwipes,
-    bool? volumeSwipes,
-    bool? brightnessSwipes,
-    bool? doubleTapToSeek,
-    bool? desktopDoubleTapToFullScreen,
-    bool? volumeArrows,
-    bool? seekArrows,
-    bool? escapeKeyCloseFullScreen,
-    bool? numPadDecimalKeyToggleFit,
-    bool? enterKeyOpensFullScreen,
-    bool? spaceKeyTogglePlay,
-  }) {
+  EnabledControls copyWith(
+      {bool? desktopTapToPlayAndPause,
+      bool? seekSwipes,
+      bool? volumeSwipes,
+      bool? brightnessSwipes,
+      bool? doubleTapToSeek,
+      bool? desktopDoubleTapToFullScreen,
+      bool? volumeArrows,
+      bool? seekArrows,
+      bool? escapeKeyCloseFullScreen,
+      bool? numPadDecimalKeyToggleFit,
+      bool? enterKeyOpensFullScreen,
+      bool? spaceKeyTogglePlay,
+      bool? onLongPressSpeedUp}) {
     return EnabledControls(
-      desktopTapToPlayAndPause:
-          desktopTapToPlayAndPause ?? this.desktopTapToPlayAndPause,
-      seekSwipes: seekSwipes ?? this.seekSwipes,
-      volumeSwipes: volumeSwipes ?? this.volumeSwipes,
-      brightnessSwipes: brightnessSwipes ?? this.brightnessSwipes,
-      doubleTapToSeek: doubleTapToSeek ?? this.doubleTapToSeek,
-      desktopDoubleTapToFullScreen:
-          desktopDoubleTapToFullScreen ?? this.desktopDoubleTapToFullScreen,
-      volumeArrows: volumeArrows ?? this.volumeArrows,
-      seekArrows: seekArrows ?? this.seekArrows,
-      escapeKeyCloseFullScreen:
-          escapeKeyCloseFullScreen ?? this.escapeKeyCloseFullScreen,
-      numPadDecimalKeyToggleFit:
-          numPadDecimalKeyToggleFit ?? this.numPadDecimalKeyToggleFit,
-      enterKeyOpensFullScreen:
-          enterKeyOpensFullScreen ?? this.enterKeyOpensFullScreen,
-      spaceKeyTogglePlay: spaceKeyTogglePlay ?? this.spaceKeyTogglePlay,
-    );
+        desktopTapToPlayAndPause:
+            desktopTapToPlayAndPause ?? this.desktopTapToPlayAndPause,
+        seekSwipes: seekSwipes ?? this.seekSwipes,
+        volumeSwipes: volumeSwipes ?? this.volumeSwipes,
+        brightnessSwipes: brightnessSwipes ?? this.brightnessSwipes,
+        doubleTapToSeek: doubleTapToSeek ?? this.doubleTapToSeek,
+        desktopDoubleTapToFullScreen:
+            desktopDoubleTapToFullScreen ?? this.desktopDoubleTapToFullScreen,
+        volumeArrows: volumeArrows ?? this.volumeArrows,
+        seekArrows: seekArrows ?? this.seekArrows,
+        escapeKeyCloseFullScreen:
+            escapeKeyCloseFullScreen ?? this.escapeKeyCloseFullScreen,
+        numPadDecimalKeyToggleFit:
+            numPadDecimalKeyToggleFit ?? this.numPadDecimalKeyToggleFit,
+        enterKeyOpensFullScreen:
+            enterKeyOpensFullScreen ?? this.enterKeyOpensFullScreen,
+        spaceKeyTogglePlay: spaceKeyTogglePlay ?? this.spaceKeyTogglePlay,
+        onLongPressSpeedUp: onLongPressSpeedUp ?? this.onLongPressSpeedUp);
   }
 }

@@ -21,11 +21,13 @@ dependencies:
   meta: ^1.7.0
   universal_platform: ^1.0.0+1
   fullscreen_window: ^1.0.4
-  video_player_media_kit: ^0.0.10
+  video_player_media_kit: ^0.0.12
     # path: ../../video_player_media_kit
 
 
-  window_manager: ^0.3.0
+  window_manager: ^0.3.2
+  # window_manager: 
+  #   path: ../../window_manager
   wakelock: ^0.6.1+2
   shared_preferences: ^2.0.13
   path_provider: ^2.0.6
@@ -83,6 +85,9 @@ flutter:
     - assets/icons/rewind.png
     - assets/icons/sound.png
     - assets/icons/picture-in-picture.png
+    - assets/icons/exit_picture-in-picture.png
+    - assets/icons/lock-screen.png
+    - assets/icons/exit_lock-screen.png
     - assets/icons/fit.png
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

@@ -3,10 +3,12 @@ import 'package:flutter_meedu_videoplayer/meedu_player.dart';
 import 'package:flutter_meedu_videoplayer/src/widgets/styles/controls_container.dart';
 import 'package:flutter_meedu_videoplayer/src/widgets/styles/primary/bottom_controls.dart';
 
-class PrimaryVideoPlayerControls extends StatelessWidget {
-  final Responsive responsive;
-  const PrimaryVideoPlayerControls({Key? key, required this.responsive})
-      : super(key: key);
+import 'primary_player_controls.dart';
+
+class PrimaryListVideoPlayerControls extends PrimaryVideoPlayerControls {
+  const PrimaryListVideoPlayerControls(
+      {Key? key, required Responsive responsive})
+      : super(key: key, responsive: responsive);
 
   @override
   Widget build(BuildContext context) {
@@ -14,6 +16,8 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
 
     return ControlsContainer(
       responsive: responsive,
+      preventHorizontalDrag: true,
+      preventVerticalDrag: true,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -39,7 +43,6 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
               if (_.enabledButtons.rewindAndfastForward) ...[
                 PlayerButton(
                   onPressed: _.rewind,
-                  semantic: "ย้อนกลับ",
                   size: responsive.iconSize(),
                   iconColor: Colors.white,
                   backgroundColor: Colors.transparent,
@@ -75,7 +78,6 @@ class PrimaryVideoPlayerControls extends StatelessWidget {
                 const SizedBox(width: 10),
                 PlayerButton(
                   onPressed: _.fastForward,
-                  semantic: "ไปข้างหน้า",
                   iconColor: Colors.white,
                   backgroundColor: Colors.transparent,
                   size: responsive.iconSize(),
